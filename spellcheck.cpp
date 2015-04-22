@@ -99,12 +99,13 @@ class SpellCheck
 			string dWord;
 			dWord=*i;
 			int eDist=LevenshteinDistance(word,word.length(),dWord,dWord.length());
-			if(eDist<=1)
+			if(eDist<=2)
 			{	
 				cout<<dWord<<" ";
 			}
 		}
-	}
+	
+	}	
 	
 };
 
@@ -120,9 +121,11 @@ int main()
 	string input_word;
 	int f=1;
 	cout<<"Enter a File name\n";
+	
 	string fname;
 	cin>>fname;
-	ifstream fin(fname);
+	ifstream fin;
+	fin.open(fname.c_str());
 	
 	if(!fin)
 	{
