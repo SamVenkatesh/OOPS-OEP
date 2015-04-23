@@ -9,10 +9,11 @@
 #include<algorithm>
 #include<fstream>
 #include<string>
+#include<cmath>
 using namespace std;
 
-
-int LevenshteinDistance(string s,int s_len, string t,int t_len)
+//Calculates the Levenshtein Distance between two strings and returns the integer value.
+int CalcLevenshteinDistance(string s,int s_len, string t,int t_len)
 {
  
   int d[s_len][t_len];
@@ -62,9 +63,10 @@ class SpellCheck
 	{
 		//Import the words from the file and push_back into the vector.	
 		ifstream fin("american-english.txt");
+		
 		if(!fin)
 		{
-			cout<<"Error opening input file.\n";
+			cout<<"Error opening dictionary file.\n";
 			exit(-1);			
 		}
 		while(!fin.eof())
@@ -78,7 +80,7 @@ class SpellCheck
 	{
 		return i;
 	}
-	//Check whether the given word from the text file is present in the dictionary or not and return bool value
+	//Check whether the given word from the text file is present in the dictionary or not and return bool value.
 	int Check_ifPresent(string word)
 	{
 		std::transform(word.begin(), word.end(), word.begin(), ::tolower);
@@ -89,8 +91,11 @@ class SpellCheck
 	}
 
 	/*Uses an iterator i across the Dictionary vector and applies the Distance forumla between each word in the dictionary 
-	  and the word from the text file being checked. If the edit distance is found to be less than or equal to 1 the word 
-	  is considered a valid alternative and is displayed as such. */
+	  and the word from the text file being checked. If the edit distance is found to be less than or equal to 3 the word 
+	  is considered a valid alternative and is displayed as such.
+
+	  This function was later updated considering an assumption that most incorrect words usually have the correct first
+	  letter at the least and this restriction helped produce a more accurate and shorter list of alternatives. */
 	void Check_eDistance(string word)
 	{
 		vector <string>::iterator i;
@@ -98,8 +103,8 @@ class SpellCheck
 		{
 			string dWord;
 			dWord=*i;
-			int eDist=LevenshteinDistance(word,word.length(),dWord,dWord.length());
-			if(eDist<=2)
+			int eDist=CalcLevenshteinDistance(word,word.length(),dWord,dWord.length());
+			if(eDist<=3 && dWord.length()>2 && word[0]==dWord[0] && abs(dWord.length()-word.length())<=2)
 			{	
 				cout<<dWord<<" ";
 			}
